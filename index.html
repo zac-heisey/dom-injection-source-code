@@ -145,11 +145,11 @@
 				);
 			};
 
-			// Listen for scroll events on the window
-			window.addEventListener('scroll', function(event) {
+			// Load image function
+			var loadImage = function(event) {
 				// Check each image to see if it's in the viewport
 				for (var i = 0; i < images.length; i++) {
-					// Bail ff image is not in viewport
+					// Bail if image is not in viewport
 					if (!isInViewport(images[i])) continue;
 
 					// Get the image URL
@@ -159,9 +159,26 @@
 					// Add image to DOM
 					images[i].innerHTML = '<img src="' + img + '">';
 
+					// Get the caption
+					var captionText = images[i].getAttribute('data-caption');
+					if (captionText) {
+						var caption = document.createElement('caption');
+						caption.textContent = captionText;
+						var img = images[i].querySelector('img');
+						images[i].insertBefore(caption, img.nextSibling);
+					}
+
+					// Remote data-image attribute after image is loaded
+					images[i].removeAttribute('data-image');
 				}
 
-			}, false);
+			};
+
+			// Load any images in the viewport on page load
+			loadImage();
+			// Listen for scroll events on the window
+			window.addEventListener('scroll', loadImage, false);
+			
 		</script>
 	</body>
 </html>
